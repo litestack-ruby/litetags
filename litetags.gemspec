@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://github.com/litestack-ruby/litetags"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
-  
+
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   spec.add_dependency "activerecord", "~> 6.1"
-  
+
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "simplecov"
 

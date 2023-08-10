@@ -43,13 +43,13 @@ ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:"
 ActiveRecord::Schema.define do
   create_table :posts, force: true do |t|
     t.json :tags, null: false, default: []
-    t.check_constraint "JSON_TYPE(tags) = 'array'", name: 'post_tags_is_array'
+    t.check_constraint "JSON_TYPE(tags) = 'array'", name: "post_tags_is_array"
     t.json :empties, null: false, default: []
   end
 end
 
 class Post < ActiveRecord::Base
   include Litetags
-  
+
   tag_columns :tags, :empties
 end
