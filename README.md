@@ -1,24 +1,72 @@
 # Litetags
 
-TODO: Delete this and the text below, and describe your gem
+Fast & simple Rails ActiveRecord model tagging using native SQLite functionality. This is a port of [@hopsoft](https://twitter.com/hopsoft)'s [tag_columns](https://github.com/hopsoft/tag_columns) gem, which is uses native PostgreSQL functionality.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/litetags`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem makes it easy to:
+
+* Assign categories to your database records.
+* Assign multiple groups to user records
+* Assign categories to blog posts et al.
+* etc...
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ bundle add litetags
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ gem install litetags
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# db/migrate/TIMESTAMP_add_groups_to_user.rb
+class AddGroupsToUser < ActiveRecord::Migration[5.0]
+  def change
+    add_column :users, :groups, :json, null: false, default: []
+    add_check_constraint :users, "JSON_TYPE(groups) = 'array'", name: 'user_groups_is_array'
+  end
+end
+```
+
+```ruby
+# app/models/user.rb
+class User < ApplicationRecord
+  include Litetags
+  tag_columns :groups
+end
+```
+
+```ruby
+user = User.find(1)
+
+# assigning tags
+user.groups << :reader
+user.groups << :writer
+user.save
+
+# checking tags
+is_writer            = user.has_group?(:writer)
+is_reader_or_writer  = user.has_any_groups?(:reader, :writer)
+is_reader_and_writer = user.has_all_groups?(:reader, :writer)
+
+# finding tagged records
+assigned                = User.with_groups
+unassigned              = User.without_groups
+writers                 = User.with_any_groups(:writer)
+non_writers             = User.without_any_groups(:writer)
+readers_or_writers      = User.with_any_groups(:reader, :writer)
+readers_and_writers     = User.with_all_groups(:reader, :writer)
+non_readers_and_writers = User.without_all_groups(:reader, :writer)
+
+# find unique tags across all users
+User.unique_groups
+
+# find unique tags for users with the last name 'Smith'
+User.unique_groups(last_name: "Smith")
+```
 
 ## Development
 
@@ -28,7 +76,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/litetags. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/litetags/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/litestack-ruby/litetags. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/litestack-ruby/litetags/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -36,4 +84,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Litetags project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/litetags/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Litetags project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/litestack-ruby/litetags/blob/main/CODE_OF_CONDUCT.md).
