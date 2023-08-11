@@ -2,8 +2,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/litetags.svg)](https://rubygems.org/gems/litetags)
 [![Gem Downloads](https://img.shields.io/gem/dt/litetags)](https://rubygems.org/gems/litetags)
-<!-- ![Tests](https://github.com/litestack-ruby/litetags/actions/workflows/main.yml/badge.svg) -->
-<!-- ![Coverage](https://img.shields.io/badge/code_coverage-24%25-red) -->
+![Tests](https://github.com/litestack-ruby/litetags/actions/workflows/main.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/code_coverage-80%25-green)
 
 Fast & simple Rails ActiveRecord model tagging using native SQLite functionality. This is a port of [@hopsoft](https://twitter.com/hopsoft)'s [tag_columns](https://github.com/hopsoft/tag_columns) gem, which is uses native PostgreSQL functionality.
 
